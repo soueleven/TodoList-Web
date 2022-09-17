@@ -1,0 +1,25 @@
+version: '3'
+services:
+ app:
+   ports:
+     - "8000:80"
+   build: ./docker/app
+   container_name: app
+   volumes:
+     - ./src:/var/www/html
+ mysql:
+   platform: linux/x86_64
+   image: mysql:5.7
+   container_name: mysql
+   environment:
+     MYSQL_ROOT_PASSWORD: root
+     MYSQL_DATABASE: app
+     MYSQL_USER: user
+     MYSQL_PASSWORD: 1qazxsw2
+     TZ: 'Asia/Tokyo'
+   command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+   volumes:
+     - ./docker/mysql/data:/var/lib/mysql
+     - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+   ports:
+     - 3306:3306
