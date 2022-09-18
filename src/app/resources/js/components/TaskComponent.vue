@@ -79,7 +79,6 @@ export default {
             });
         },
         displayUpdate(task) {
-            console.log(task)
             this.isEdit = true;
             this.updateForm = true;
             this.updateId = task.id;
