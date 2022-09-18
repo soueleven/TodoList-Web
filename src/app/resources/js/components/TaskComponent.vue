@@ -15,12 +15,24 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ task.text }}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">#{{ task.id }}  create at: {{ moment(task.created_at) }}</h6>
-                        <button @click="displayUpdate(book)" style="margin-right: 5px" class="btn btn-secondary" >Edit</button>
-                        <button @click="deleteBook(book.id)" class="btn btn-danger" >Delete</button>
+                        <button :disabled="isEdit" @click="displayUpdate(task)" style="margin-right: 5px" class="btn btn-secondary">Edit</button>
+                        <button :disabled="isEdit" @click="deleteTask(task.id)" class="btn btn-danger">Delete</button>
                     </div>
                     <div class="card-footer text-muted">
                         <label v-if="task.status==0">Uncompleted</label>
                         <label v-else>Completed</label>
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="margin-top: 30px">
+                <div v-if="updateForm">
+                    <div class="card-body">
+                        <input type="text" v-model="updateText" class="card-title">
+                        <h6 class="card-subtitle mb-2 text-muted">#{{ updateId }}</h6>
+                        <button @click="updateTaskStatus" v-if="updateStatus==0" class="btn btn-success" style="margin-right: 5px">Completed</button>
+                        <button @click="updateTaskStatus" v-else class="btn btn-warning" style="margin-right: 5px">Uncompleted</button>
+                        <button @click="updateTaskText" class="btn btn-secondary" style="margin-right: 5px">Update</button>
+                        <button @click="updateCancel" class="btn btn-danger" style="margin-right: 5px">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -36,6 +48,12 @@ export default {
         return {
             tasks: {},
             text: '',
+            status: 0,
+            isEdit: false,
+            updateForm: false,
+            updateId: '',
+            updateText: '',
+            updateStatus: '',
         }
     },
     created() {
@@ -52,6 +70,43 @@ export default {
                 text: this.text,
             }).then((res) => {
                 this.text = '',
+                this.getTasks();
+            });
+        },
+        displayUpdate(task) {
+            console.log(task)
+            this.isEdit = true;
+            this.updateForm = true;
+            this.updateId = task.id;
+            this.updateText = task.text;
+            this.updateStatus = task.status;
+        },
+        updateTaskText() {
+            axios.put('/api/tasks/' + this.updateId, {
+                text: this.updateText,
+                status: this.updateStatus
+            }).then((res) => {
+                this.isEdit = false;
+                this.updateForm = false;
+                this.getTasks();
+            });
+        },
+        updateTaskStatus() {
+            axios.put('/api/tasks/' + this.updateId, {
+                text: this.updateText,
+                status: !this.updateStatus
+            }).then((res) => {
+                this.isEdit = false;
+                this.updateForm = false;
+                this.getTasks();
+            });
+        },
+        updateCancel() {
+            this.isEdit = false;
+            this.updateForm = false;
+        },
+        deleteTask(id) {
+            axios.delete('/api/tasks/' + id).then((res) => {
                 this.getTasks();
             });
         },
