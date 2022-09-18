@@ -22,7 +22,7 @@ cd /var/www/html/app
 install the package
 ```
 cp .env.example .env
-composer installl
+composer install
 npm install && npm run dev
 ```
 
