@@ -2,6 +2,15 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <input type="text" class="form-control" v-model="text" placeholder="Enter your task">
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-primary" @click="addTask">Add</button>
+                    </div>
+                </div>
+
                 <div class="card" style="margin-top: 30px" v-for="task in tasks" :key="task.id">
                     <div class="card-body">
                         <h5 class="card-title">{{ task.text }}</h5>
@@ -26,6 +35,7 @@ export default {
     data() {
         return {
             tasks: {},
+            text: '',
         }
     },
     created() {
@@ -35,6 +45,14 @@ export default {
         getTasks() {
             axios.get('/api/tasks').then(res => {
                 this.tasks = res.data;
+            });
+        },
+        addTask() {
+            axios.post('/api/tasks', {
+                text: this.text,
+            }).then((res) => {
+                this.text = '',
+                this.getTasks();
             });
         },
         moment(date) {
