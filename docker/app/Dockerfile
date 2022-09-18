@@ -15,4 +15,7 @@ unzip \
 vim \
 libpng-dev \
 libpq-dev \
+nodejs npm \
 && docker-php-ext-install pdo_mysql
+
+RUN a2enmod rewrite
