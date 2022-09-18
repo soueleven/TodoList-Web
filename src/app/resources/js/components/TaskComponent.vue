@@ -9,6 +9,9 @@
                     <div class="col">
                         <button type="button" class="btn btn-primary" @click="addTask">Add</button>
                     </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-dark" @click="sortTask"><label v-if="order">Sort by Desc</label><label v-else>Sort by Asc</label></button>
+                    </div>
                 </div>
 
                 <div class="card" style="margin-top: 30px" v-for="task in tasks" :key="task.id">
@@ -24,6 +27,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="card" style="margin-top: 30px">
                 <div v-if="updateForm">
                     <div class="card-body">
@@ -54,6 +58,7 @@ export default {
             updateId: '',
             updateText: '',
             updateStatus: '',
+            order: true,
         }
     },
     created() {
@@ -112,7 +117,19 @@ export default {
         },
         moment(date) {
             return moment(date).format('YYYY-MM-DD hh:mm:ss')
-        }
+        },
+        sortTask() {
+            this.order = !this.order
+            if (this.order) {
+                this.tasks.sort(function (a, b) {
+                    return a.id - b.id;
+                });
+            } else {
+                this.tasks.sort(function (a, b) {
+                    return b.id - a.id;
+                });
+            }
+        },
     },
 }
 </script>
