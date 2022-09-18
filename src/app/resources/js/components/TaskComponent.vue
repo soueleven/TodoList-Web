@@ -1,23 +1,45 @@
 <template>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">Task Component</div>
-
+            <div class="container">
+                <div class="card" style="margin-top: 30px" v-for="task in tasks" :key="task.id">
                     <div class="card-body">
-                        I'm an Task component.
+                        <h5 class="card-title">{{ task.text }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">#{{ task.id }}  create at: {{ moment(task.created_at) }}</h6>
+                        <button @click="displayUpdate(book)" style="margin-right: 5px" class="btn btn-secondary" >Edit</button>
+                        <button @click="deleteBook(book.id)" class="btn btn-danger" >Delete</button>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <label v-if="task.status==0">Uncompleted</label>
+                        <label v-else>Completed</label>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </template>
-
+  
 <script>
-    export default {
-        mounted() {
-            console.log('Component mounted.')
+import moment from 'moment';
+
+export default {
+    data() {
+        return {
+            tasks: {},
         }
-    }
+    },
+    created() {
+        this.getTasks();
+    },
+    methods: {
+        getTasks() {
+            axios.get('/api/tasks').then(res => {
+                this.tasks = res.data;
+            });
+        },
+        moment(date) {
+            return moment(date).format('YYYY-MM-DD hh:mm:ss')
+        }
+    },
+}
 </script>
