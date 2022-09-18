@@ -1,5 +1,11 @@
 # TodoList-Web
 
+## Summary
+backend: laravel  
+frontend: vue.js  
+database: mysql  
+server: apache  
+
 ## Requirements
 - docker
 - docker compose
